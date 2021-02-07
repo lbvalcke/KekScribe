@@ -3,7 +3,6 @@ APP_NAME = 'https://kekscribe.herokuapp.com/'
 PORT = int(os.environ.get('PORT', '8443'))
 
 import os
-import logging
 import numpy as np
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import (
@@ -16,13 +15,6 @@ from telegram.ext import (
     CallbackContext,
 )
 
-
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-
-logger = logging.getLogger(__name__)
 
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
