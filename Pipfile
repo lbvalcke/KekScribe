@@ -4,9 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-emit = "*"
-numpy = "*"
-telegram = "*"
 
 [dev-packages]
 
