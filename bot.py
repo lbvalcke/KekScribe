@@ -1,7 +1,3 @@
-TOKEN = '1659428553:AAGgA--dj07jMkXTFogcbfr5VEnXAbBVkbk'
-APP_NAME = 'https://kekscribe.herokuapp.com/'
-PORT = int(os.environ.get('PORT', '8443'))
-
 import os
 import numpy as np
 from telegram import ReplyKeyboardMarkup, Update
@@ -15,6 +11,9 @@ from telegram.ext import (
     CallbackContext,
 )
 
+TOKEN = '1659428553:AAGgA--dj07jMkXTFogcbfr5VEnXAbBVkbk'
+APP_NAME = 'https://kekscribe.herokuapp.com/'
+PORT = int(os.environ.get('PORT', '8443'))
 
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
