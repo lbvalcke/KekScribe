@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import (
     Updater,
