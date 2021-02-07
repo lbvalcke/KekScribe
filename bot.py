@@ -246,7 +246,7 @@ def scribe(update: Update, context: CallbackContext) -> None:
     
 def main():
     # Create the Updater and pass it your bot's token.
-    pp = PicklePersistence(filename='dubersationbot')
+    pp = PicklePersistence(filename='conversationbot', store_user_data=False)
     updater = Updater(TOKEN, persistence=pp)
 
     # Get the dispatcher to register handlers
@@ -261,7 +261,7 @@ def main():
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        name="nominate",
+        name="conversationbot",
         persistent=True
     )
     dp.add_handler(nominate_handler)
@@ -282,7 +282,7 @@ def main():
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        name="dub",
+        name="conversationbot",
         persistent=True
     )
 
@@ -309,7 +309,7 @@ def main():
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        name="alter",
+        name="conversationbot",
         persistent=True
     )
 
@@ -326,7 +326,7 @@ def main():
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        name="expunge",
+        name="conversationbot",
         persistent=True
     )
 
