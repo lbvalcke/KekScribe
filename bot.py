@@ -1,4 +1,5 @@
 import os
+
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import (
     Updater,
@@ -124,15 +125,18 @@ def received_score(update: Update, context: CallbackContext) -> None:
 
     new_score = int(update.message.text)
 
-    if isinstance(new_score,int):
-        name = context.user_data.pop('choice',0)
-        context.user_data[name] = new_score 
-        reply_text = (f'{name}\'s new balance is {new_score}. Let\'s, erm, keep this between the two of us.')
-        update.message.reply_text(reply_text)
-    else:
-        reply_text = ('Sir... that is not a whole number. Maybe you\'ve made some error.')
+    name = context.user_data.pop('choice',0)
+    context.user_data[name] = new_score 
+    reply_text = (f'{name}\'s new balance is {new_score}. Let\'s, erm, keep this between the two of us.')
+    update.message.reply_text(reply_text)
+
     return ConversationHandler.END
 
+def no_score(update: Update, context: CallbackContext) -> None:
+    reply_text = ('Sir... that is not a whole number. Perhaps you\'ve made some error.')
+    update.message.reply_text(reply_text)
+
+    return ConversationHandler.END
 
 def expunge(update: Update, context: CallbackContext) -> None:
     if context.user_data:
@@ -154,7 +158,7 @@ def removal(update: Update, context: CallbackContext) -> None:
     selection = update.message.text
     if selection in context.user_data.keys():
         context.user_data.pop(selection,0)
-        reply_text = f'We have effaced the scoundrel, {selection}, from the Records, Sire' 
+        reply_text = f'We have effaced the scoundrel, {selection}, from the Records, Sire.' 
         update.message.reply_text(reply_text)
     else: 
         reply_text = f'I don\'t seem to have record of {selection}. Perhaps you\'ve made some error.'
@@ -298,8 +302,12 @@ def main():
             ],
             TYPING_REPLY_2: [
                 MessageHandler(
-                    Filters.regex('^Done$'),
+                    Filters.regex('^[-+]?[0-9]+$'),
                     received_score,
+                ),
+                MessageHandler(
+                   ~ Filters.regex('^[-+]?[0-9]+$'),
+                    no_score,
                 )
             ],
         },
