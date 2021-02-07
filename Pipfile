@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 telegram = "*"
+python-telegram-bot = "*"
 
 [dev-packages]
 
