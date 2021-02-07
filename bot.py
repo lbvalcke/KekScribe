@@ -21,8 +21,9 @@ else:
 
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
-
 CHOOSING_1, TYPING_REPLY_1, TYPING_CHOICE_1 = range(3)
+CHOOSING_2, TYPING_REPLY_2, TYPING_CHOICE_2 = range(3)
+CHOOSING_3, TYPING_REPLY_3, TYPING_CHOICE_3 = range(3)
 
 def nominate(update: Update, context: CallbackContext) -> None:
     reply_text = "KekScribe at your service, Sire. Whomst doth thou nominate to this most glorious competition?"
@@ -59,19 +60,26 @@ def dub(update: Update, context: CallbackContext) -> None:
         reply_text = (
         "Unfortunately, we have no records to adjust, yet, Sire.")
         reply_keyboard = [['Nevermind...']]
+        update.message.reply_text(reply_text)
 
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-
     update.message.reply_text(reply_text, reply_markup=markup)
+
     return CHOOSING_1
 
 def name_change(update: Update, context: CallbackContext) -> None:
     selection = update.message.text
-    context.user_data['choice'] = selection
+    if selection in context.user_data.keys():
+        context.user_data['choice'] = selection
 
-    reply_text = f'Certainly. What shall Sir {selection}\'s new Title be?'
-    update.message.reply_text(reply_text)
-    return TYPING_REPLY_1
+        reply_text = f'Certainly. What shall Sir {selection}\'s new Title be?'
+        update.message.reply_text(reply_text)
+        action = TYPING_REPLY_1
+    else: 
+        reply_text = f'I don\'t seem to have record of {selection}. Perhaps you\'ve made some sort of error.'
+        update.message.reply_text(reply_text)
+        action = ConversationHandler.END
+    return action
 
 def received_information(update: Update, context: CallbackContext) -> None:
     new_name = update.message.text
@@ -82,12 +90,83 @@ def received_information(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(reply_text)
     return ConversationHandler.END
 
+def alter(update: Update, context: CallbackContext) -> None:
+    if context.user_data:
+        reply_text = (
+        "I see you\'d like to alter a balance with the Ministry of Records."
+        +"\nPlease select a name from our records to proceed.")
+        reply_keyboard = keyboard(context.user_data)
+    else:
+        reply_text = (
+        "Unfortunately, we have no records to adjust, yet, Sire.")
+        reply_keyboard = [['Nevermind...']]
+        update.message.reply_text(reply_text)
+
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    update.message.reply_text(reply_text, reply_markup=markup)
+    return CHOOSING_1
+
+def score_change(update: Update, context: CallbackContext) -> None:
+    selection = update.message.text
+    if selection in context.user_data.keys():
+        context.user_data['choice'] = selection
+
+        reply_text = f'Certainly. What shall Sir {selection}\'s new balance be?'
+        update.message.reply_text(reply_text)
+        action = TYPING_REPLY_1
+    else: 
+        reply_text = f'I don\'t seem to have record of {selection}. Perhaps you\'ve made some error.'
+        update.message.reply_text(reply_text)
+        action = ConversationHandler.END
+    return action
+
+def received_score(update: Update, context: CallbackContext) -> None:
+
+    new_score = update.message.text
+
+    if isinstance(new_score,int):
+        name = context.user_data.pop('choice',0)
+        context.user_data[name] = new_score 
+        reply_text = (f'{name}\'s new balance is {new_score}. Let\'s, erm, keep this between the two of us.')
+        update.message.reply_text(reply_text)
+    else:
+        reply_text = ('Sir... that is not a whole number. Maybe you\'ve made some error.')
+    return ConversationHandler.END
+
+
+def expunge(update: Update, context: CallbackContext) -> None:
+    if context.user_data:
+        reply_text = (
+        "I see you\'d like to expunge a title from the Records."
+        +"\nPlease select a name from our records to proceed.")
+        reply_keyboard = keyboard(context.user_data)
+    else:
+        reply_text = (
+        "Unfortunately, we have no Records to expunge, yet, Sire.")
+        reply_keyboard = [['Nevermind...']]
+        update.message.reply_text(reply_text)
+
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    update.message.reply_text(reply_text, reply_markup=markup)
+    return CHOOSING_1
+
+def removal(update: Update, context: CallbackContext) -> None:
+    selection = update.message.text
+    if selection in context.user_data.keys():
+        context.user_data.pop(selection,0)
+        reply_text = f'We have effaced the scoundrel, {selection}, from the Records, Sire' 
+        update.message.reply_text(reply_text)
+    else: 
+        reply_text = f'I don\'t seem to have record of {selection}. Perhaps you\'ve made some error.'
+        update.message.reply_text(reply_text)
+    return ConversationHandler.END
+
+
 
 def no_change(update: Update, context: CallbackContext) -> None:
     reply_text = 'Until next time, Sire.'
     update.message.reply_text(reply_text)
     return ConversationHandler.END
-
 
 def keyboard(ledger):
     name_list = list(ledger.keys())
@@ -153,10 +232,12 @@ def scribe(update: Update, context: CallbackContext) -> None:
     +"\nYou beckoned, sire?" 
     +"\nAs a reminder, I am trained to respond to the following calls:"
     +"\n/scribe - To beckon me once more"
-    +"\n/nominate - To nominate a fellow for addition to the Scrolls of Kek"
+    +"\n/nominate - To nominate a fellow for addition to the Rankings of Kek"
     +"\n/upkek - To grant one Kek to the fellow of your choice"
     +"\n/kekledger - To hear a recitation of the Rankings of Kek"
-    +"\n/dub - To adjust your noble Title"    
+    +"\n/dub - To adjust your noble Title"  
+    +"\n/alter - To revise the official Records"
+    +"\n/expunge - To erase from our Records"
     )
 
     
@@ -177,7 +258,7 @@ def main():
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-        name="my_dubersation",
+        name="nominate",
         persistent=True,
         per_chat=True
     )
@@ -195,8 +276,7 @@ def main():
             TYPING_REPLY_1: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')),
-                    received_information,
-                )
+                    received_information),
             ],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
@@ -206,6 +286,49 @@ def main():
     )
 
     dp.add_handler(dub_handler)
+
+    alter_handler = ConversationHandler(
+        entry_points=[CommandHandler('alter', alter)],
+        states={
+            CHOOSING_2: [
+                MessageHandler(
+                    ~ Filters.regex('^Nevermind...$'), score_change
+                ),
+                MessageHandler(Filters.regex('^Nevermind...$'), no_change),
+            ],
+            TYPING_REPLY_2: [
+                MessageHandler(
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')),
+                    received_score,
+                )
+            ],
+        },
+        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        name="alter",
+        persistent=True,
+        per_chat=True
+    )
+
+    dp.add_handler(alter_handler)
+
+    expunge_handler = ConversationHandler(
+        entry_points=[CommandHandler('alter', expunge)],
+        states={
+            CHOOSING_3: [
+                MessageHandler(
+                    ~ Filters.regex('^Nevermind...$'), removal
+                ),
+                MessageHandler(Filters.regex('^Nevermind...$'), no_change),
+            ],
+        },
+        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        name="expunge",
+        persistent=True,
+        per_chat=True
+    )
+
+    dp.add_handler(expunge_handler)
+
 
     ledger_handler = CommandHandler('kekledger', kekledger)
     dp.add_handler(ledger_handler)
