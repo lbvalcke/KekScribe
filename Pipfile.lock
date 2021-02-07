@@ -23,13 +23,6 @@
             "index": "pypi",
             "version": "==0.4.0"
         },
-        "logging": {
-            "hashes": [
-                "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"
-            ],
-            "index": "pypi",
-            "version": "==0.4.9.6"
-        },
         "numpy": {
             "hashes": [
                 "sha256:0d28a54afcf46f1f9ebd163e49ad6b49087f22986fefd01a23ca0c1cdda25ca6",
