@@ -219,11 +219,11 @@ def main():
     dp.add_handler(scribe_handler)
 
     # scribe the Bot
-    updater.scribe_polling()
+    updater.start_polling()
 
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
-    # scribe_polling() is non-blocking and will stop the bot gracefully.
+    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 
