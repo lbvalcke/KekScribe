@@ -13,7 +13,12 @@ from telegram.ext import (
 
 TOKEN = '1659428553:AAGgA--dj07jMkXTFogcbfr5VEnXAbBVkbk'
 APP_NAME = 'https://kekscribe.herokuapp.com/'
-PORT = int(os.environ.get('PORT', '8443'))
+
+ON_HEROKU = os.environ.get('ON_HEROKU')
+if ON_HEROKU:
+    PORT = int(os.environ.get('PORT', 17995))
+else:
+    PORT = 3000
 
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
