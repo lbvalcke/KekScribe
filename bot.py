@@ -61,7 +61,6 @@ def dub(update: Update, context: CallbackContext) -> None:
         reply_text = (
         "Unfortunately, we have no records to adjust, yet, Sire.")
         reply_keyboard = [['Nevermind...']]
-        update.message.reply_text(reply_text)
 
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     update.message.reply_text(reply_text, reply_markup=markup)
