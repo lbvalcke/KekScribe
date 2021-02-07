@@ -325,7 +325,7 @@ def main():
                 MessageHandler(Filters.regex('^Nevermind...$'), no_change),
             ],
         },
-        fallbacks=[MessageHandler( & ~(Filters.regex('^Nevermind...$')), done)],
+        fallbacks=[MessageHandler(~(Filters.regex('^Nevermind...$')), done)],
         name="conversationbot",
         persistent=True
     )
