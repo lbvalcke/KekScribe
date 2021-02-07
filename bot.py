@@ -262,8 +262,7 @@ def main():
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
         name="nominate",
-        persistent=True,
-        per_chat=True
+        persistent=True
     )
     dp.add_handler(nominate_handler)
 
@@ -284,8 +283,7 @@ def main():
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
         name="dub",
-        persistent=True,
-        per_chat=True
+        persistent=True
     )
 
     dp.add_handler(dub_handler)
@@ -312,8 +310,7 @@ def main():
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
         name="alter",
-        persistent=True,
-        per_chat=True
+        persistent=True
     )
 
     dp.add_handler(alter_handler)
@@ -330,8 +327,7 @@ def main():
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
         name="expunge",
-        persistent=True,
-        per_chat=True
+        persistent=True
     )
 
     dp.add_handler(expunge_handler)
