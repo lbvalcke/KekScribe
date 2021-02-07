@@ -122,7 +122,7 @@ def score_change(update: Update, context: CallbackContext) -> None:
 
 def received_score(update: Update, context: CallbackContext) -> None:
 
-    new_score = update.message.text
+    new_score = int(update.message.text)
 
     if isinstance(new_score,int):
         name = context.user_data.pop('choice',0)
@@ -298,7 +298,7 @@ def main():
             ],
             TYPING_REPLY_2: [
                 MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex('^Done$')),
+                    Filters.regex('^Done$'),
                     received_score,
                 )
             ],
@@ -312,7 +312,7 @@ def main():
     dp.add_handler(alter_handler)
 
     expunge_handler = ConversationHandler(
-        entry_points=[CommandHandler('alter', expunge)],
+        entry_points=[CommandHandler('expunge', expunge)],
         states={
             CHOOSING_3: [
                 MessageHandler(
