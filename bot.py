@@ -256,7 +256,7 @@ def main():
         entry_points=[CommandHandler('nominate', nominate, pass_args=True)],
         states={
             CHOOSING: [
-                MessageHandler( Filters.text & ~(Filters.command | Filters.regex('^Done$')),regular_choice
+                MessageHandler( Filters.text & ~(Filters.command | Filters.regex('^Nevermind...')),regular_choice
                 )
             ],
         },
@@ -277,7 +277,7 @@ def main():
             ],
             TYPING_REPLY_1: [
                 MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex('^Done$')),
+                    Filters.text & ~(Filters.command | Filters.regex('^Nevermind...$')),
                     received_information),
             ],
         },
@@ -299,11 +299,11 @@ def main():
             ],
             TYPING_REPLY_2: [
                 MessageHandler(
-                    Filters.regex('^[-+]?[0-9]+$'),
+                    Filters.regex('^[-+]?[0-9]+$') & ~(Filters.command | Filters.regex('^Nevermind...$')),
                     received_score,
                 ),
                 MessageHandler(
-                   ~ Filters.regex('^[-+]?[0-9]+$'),
+                   ~ Filters.regex('^[-+]?[0-9]+$') & ~(Filters.command | Filters.regex('^Nevermind...$')),
                     no_score,
                 )
             ],
@@ -325,7 +325,7 @@ def main():
                 MessageHandler(Filters.regex('^Nevermind...$'), no_change),
             ],
         },
-        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        fallbacks=[MessageHandler( & ~(Filters.regex('^Nevermind...$')), done)],
         name="conversationbot",
         persistent=True
     )
